@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.ArticuloCreateDto;
 import com.example.demo.entity.ArticuloEntity;
 import com.example.demo.repository.ArticuloRepository;
 import com.example.demo.service.ArticuloService;
@@ -19,8 +20,7 @@ public class ArticuloController {
     }
 
     @PostMapping("/save")
-    //public ArticuloEntity save(@RequestBody ArticuloCreateDto articulo) {
-    public ArticuloEntity save(@RequestBody ArticuloEntity articulo) {
+    public ArticuloEntity save(@RequestBody ArticuloCreateDto articulo) {
         return articuloService.create(articulo);
     }
 

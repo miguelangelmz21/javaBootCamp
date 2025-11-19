@@ -20,7 +20,7 @@ public class ArticuloEntity {
     private String titulo;
     private String contenido;
     @Column(name = "fecha_creacion")
-    private Date fechaCreacion;
+    private Date fechaCreacion = new Date();
     @Column(name = "fecha_actualizacion")
     private Date fechaActualizacion;
     @Column(name = "url_articulo")

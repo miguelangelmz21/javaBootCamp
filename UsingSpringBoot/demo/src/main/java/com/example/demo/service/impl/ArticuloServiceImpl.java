@@ -1,12 +1,16 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.request.ArticuloCreateDto;
 import com.example.demo.entity.ArticuloEntity;
+import com.example.demo.entity.UsuarioEntity;
 import com.example.demo.repository.ArticuloRepository;
 import com.example.demo.repository.UsuarioRepository;
 import com.example.demo.service.ArticuloService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ArticuloServiceImpl implements ArticuloService {
@@ -21,14 +25,12 @@ public class ArticuloServiceImpl implements ArticuloService {
         //this.categoriaRepository = categoriaRepository;
     }
     @Override
-    public ArticuloEntity create(ArticuloEntity articulo) {
-        int idUsuario = articulo.getUsuario().getUsuarioId();
-        //Optional<UsuarioEntity> usuarioOptional = usuarioRepository.findById(idUsuario);
-        //if(usuarioOptional.isEmpty()) {
-        if(!usuarioRepository.existsById(idUsuario)) {
+    public ArticuloEntity create(ArticuloCreateDto articulo) {
+        int idUsuario = articulo.getUsuarioId();
+        Optional<UsuarioEntity> usuarioOptional = usuarioRepository.findById(idUsuario);
+        if(usuarioOptional.isEmpty()) {
             return null;
         }
-        /*
         UsuarioEntity usuarioEntity = usuarioOptional.get();
         ArticuloEntity articuloEntity = new ArticuloEntity();
         articuloEntity.setTitulo(articulo.getTitulo());
@@ -37,9 +39,8 @@ public class ArticuloServiceImpl implements ArticuloService {
         String url = "www." + usuarioEntity.getUsername() + ".articulos/" + uuidUrl;
         articuloEntity.setUrlArticulo(url);
         articuloEntity.setUsuario(usuarioEntity);
-        articuloRepository.save(articuloEntity);*/
-        return articuloRepository.save(articulo );
-        //return articuloEntity;
+        articuloRepository.save(articuloEntity);
+        return articuloEntity;
     }
 
     @Override
