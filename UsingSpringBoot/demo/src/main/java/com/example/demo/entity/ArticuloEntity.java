@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 @Entity
@@ -24,7 +25,11 @@ public class ArticuloEntity {
     private Date fechaActualizacion;
     @Column(name = "url_articulo")
     private String urlArticulo;
+
     @ManyToOne()
     @JoinColumn(name = "usuario_id_fk")
     private UsuarioEntity usuario;
+
+    @ManyToMany(mappedBy = "articulos")
+    private ArrayList<CategoriaEntity> categorias;
 }
