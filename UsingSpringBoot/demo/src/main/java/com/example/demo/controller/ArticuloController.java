@@ -2,13 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.ArticuloCreateDto;
 import com.example.demo.entity.ArticuloEntity;
-import com.example.demo.repository.ArticuloRepository;
 import com.example.demo.service.ArticuloService;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/articulo")
@@ -24,16 +21,19 @@ public class ArticuloController {
         return articuloService.create(articulo);
     }
 
-    /*@GetMapping("/{id}")
-    public ArticuloEntity getById(@PathVariable int id){
-        Optional<ArticuloEntity> articuloOptional = articuloRepository.findById(id);
-        if(articuloOptional.isPresent()){
-            ArticuloEntity articuloDB = articuloOptional.get();
-            return articuloDB;
-        }
-        return null;
+    @PostMapping("/categoria")
+    public ArticuloEntity agregarCategorias(
+            @RequestParam int articuloId,
+            @RequestParam ArrayList<Integer> idCategorias){
+        return articuloService.agregarCategoria(articuloId, idCategorias);
     }
+    /*
+    @GetMapping("/{id}")
+    public ArticuloResponseDto findById(@PathVariable int id) {
+        return articuloService.findById(id);
+    }*/
 
+    /*
     @GetMapping("/find")
     public ArrayList<ArticuloEntity> findArticulo(@RequestBody Date fechaCreacion, @RequestParam Date fechaActualizacion){
         return articuloRepository.findByFechaCreacionAndfechaActualizacion(fechaCreacion,fechaActualizacion);

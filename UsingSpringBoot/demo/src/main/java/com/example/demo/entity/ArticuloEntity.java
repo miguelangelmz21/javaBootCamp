@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="articulos")
@@ -30,6 +30,11 @@ public class ArticuloEntity {
     @JoinColumn(name = "usuario_id_fk")
     private UsuarioEntity usuario;
 
-    @ManyToMany(mappedBy = "articulos")
-    private ArrayList<CategoriaEntity> categorias;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "articulo_categoria",
+            joinColumns = @JoinColumn(name = "articulo_id_fk"),
+            inverseJoinColumns = @JoinColumn(name = "categoria_id_fk")
+    )
+    private List<CategoriaEntity> categorias;
 }
