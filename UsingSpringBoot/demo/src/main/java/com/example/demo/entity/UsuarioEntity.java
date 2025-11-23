@@ -16,6 +16,8 @@ public class UsuarioEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
     private int usuarioId;
+    private String nombres;
+    private String apellidos;
     private String username;
     private String password;
     private String email;
@@ -23,4 +25,6 @@ public class UsuarioEntity {
     private Date fechaNacimiento;
     private String sexo;
     private String dni;
+    @Column(name = "comentarios_count", columnDefinition = "integer default 0")
+    private int comentariosCount = 0;
 }

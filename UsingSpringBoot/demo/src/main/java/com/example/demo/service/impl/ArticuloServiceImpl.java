@@ -1,6 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.request.ArticuloCreateDto;
+import com.example.demo.dto.response.ArticuloResponseDto;
+import com.example.demo.dto.response.CategoriaResponseArticuloDto;
+import com.example.demo.dto.response.UsuarioResponseArticuloDto;
 import com.example.demo.entity.ArticuloEntity;
 import com.example.demo.entity.CategoriaEntity;
 import com.example.demo.entity.UsuarioEntity;
@@ -22,11 +25,13 @@ public class ArticuloServiceImpl implements ArticuloService {
     private final ArticuloRepository articuloRepository;
     private final UsuarioRepository usuarioRepository;
     private final CategoriaRepository categoriaRepository;
+    //private final ModelMapper modelMapper;
 
     public ArticuloServiceImpl(ArticuloRepository articuloRepository, UsuarioRepository usuarioRepository, CategoriaRepository categoriaRepository) {
         this.articuloRepository = articuloRepository;
         this.usuarioRepository = usuarioRepository;
         this.categoriaRepository = categoriaRepository;
+        //this.modelMapper = modelMapper;
     }
     @Override
     public ArticuloEntity create(ArticuloCreateDto articulo) {
@@ -53,9 +58,20 @@ public class ArticuloServiceImpl implements ArticuloService {
     }
 
     @Override
-    public ArticuloEntity findById(Integer id) {
-        return null;
+    public ArticuloResponseDto findById(Integer id) {
+        ArticuloEntity articulo = articuloRepository.findById(id).orElse(null);
+        if (articulo == null) {
+            return null;
+        }
+        return fromEntityToDto(articulo);
     }
+    /*public ArticuloResponseDto findById(Integer id) {
+        ArticuloResponseDto articulo = articuloRepository.findById(id).orElse(null);
+        if (articulo == null) {
+            return null;
+        }
+        return modelMapper.map(articulo, ArticuloResponseDto.class);
+    }*/
 
     @Override
     public ArticuloEntity update(ArticuloEntity articulo, int id) {
@@ -80,5 +96,37 @@ public class ArticuloServiceImpl implements ArticuloService {
         articuloEntity.setCategorias(categorias);
         articuloRepository.save(articuloEntity);
         return articuloEntity;
+    }
+
+    private ArticuloResponseDto fromEntityToDto(ArticuloEntity articulo) {
+        // construyendo el articulo dto
+        ArticuloResponseDto articuloDto = new ArticuloResponseDto();
+        articuloDto.setArticuloId(articulo.getArticuloId());
+        articuloDto.setTitulo(articulo.getTitulo());
+        articuloDto.setContenido(articulo.getContenido());
+        articuloDto.setFechaActualizacion(articulo.getFechaActualizacion());
+        articuloDto.setFechaCreacion(articulo.getFechaCreacion());
+        articuloDto.setUrlArticulo(articulo.getUrlArticulo());
+        // construyendo el usuario dto
+        UsuarioResponseArticuloDto usuario = new UsuarioResponseArticuloDto();
+        UsuarioEntity usuarioDb = articulo.getUsuario();
+        usuario.setIdUsuario(usuarioDb.getUsuarioId());
+        usuario.setUsername(usuarioDb.getUsername());
+        usuario.setEmail(usuarioDb.getEmail());
+        articuloDto.setUsuario(usuario);
+
+        // construyendo categorias
+        ArrayList<CategoriaResponseArticuloDto> categorias = new ArrayList<>();
+        List<CategoriaEntity> categoriasDb = articulo.getCategorias();
+        for(CategoriaEntity categoria: categoriasDb) {
+            categorias.add(
+                    new CategoriaResponseArticuloDto(
+                            categoria.getCategoriaId(),
+                            categoria.getNombreCategoria())
+            );
+        }
+
+        articuloDto.setCategorias(categorias);
+        return articuloDto;
     }
 }

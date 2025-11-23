@@ -18,7 +18,6 @@ public class ComentarioEntity {
 
     @Column(length = 512)
     private String contenido;
-
     private Date fechaCreacion = new Date();
     private Date fechaActualizacion;
 

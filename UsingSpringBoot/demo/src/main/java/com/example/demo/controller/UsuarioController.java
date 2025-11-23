@@ -1,7 +1,10 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.CreateUsuarioDto;
+import com.example.demo.dto.response.ResponseUsuarioDto;
 import com.example.demo.entity.UsuarioEntity;
 import com.example.demo.repository.UsuarioRepository;
+import com.example.demo.service.UsuarioService;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
@@ -13,9 +16,12 @@ import java.util.Optional;
 @RequestMapping("/api/v1/usuario")
 
 public class UsuarioController {
-    private UsuarioRepository usuarioRepository;
-    public UsuarioController(UsuarioRepository usuarioRepository) {
+    private final UsuarioRepository usuarioRepository;
+    private final UsuarioService usuarioService;
+    public UsuarioController(UsuarioRepository usuarioRepository, UsuarioService usuarioService) {
+
         this.usuarioRepository = usuarioRepository;
+        this.usuarioService = usuarioService;
     }
     @GetMapping("/{id}")
     public UsuarioEntity getById(@PathVariable int id){
@@ -35,9 +41,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/save")
-    public UsuarioEntity saveUsuario(@RequestBody UsuarioEntity usuario) {
-        usuarioRepository.save(usuario);
-        return usuario;
+    public ResponseUsuarioDto saveUsuario(@RequestBody CreateUsuarioDto usuario) {
+        return usuarioService.crearUsuario(usuario);
     }
 
     // hacer un find para articulo en el cual enviemos los siguientes parametros
