@@ -14,10 +14,7 @@ import com.example.demo.service.ArticuloService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -34,7 +31,7 @@ public class ArticuloServiceImpl implements ArticuloService {
         //this.modelMapper = modelMapper;
     }
     @Override
-    public ArticuloEntity create(ArticuloCreateDto articulo) {
+    public ArticuloResponseDto  create(ArticuloCreateDto articulo) {
         int idUsuario = articulo.getUsuarioId();
         Optional<UsuarioEntity> usuarioOptional = usuarioRepository.findById(idUsuario);
         if(usuarioOptional.isEmpty()) {
@@ -49,7 +46,30 @@ public class ArticuloServiceImpl implements ArticuloService {
         articuloEntity.setUrlArticulo(url);
         articuloEntity.setUsuario(usuarioEntity);
         articuloRepository.save(articuloEntity);
-        return articuloEntity;
+        List<CategoriaEntity> categorias = articuloEntity.getCategorias();
+        List<CategoriaResponseArticuloDto> categoriasDto = new ArrayList<>();
+        for (CategoriaEntity categoria : categorias) {
+            categoriasDto.add(new CategoriaResponseArticuloDto(
+                    categoria.getCategoriaId(),
+                    categoria.getNombreCategoria()
+            ));
+        }
+        ArticuloResponseDto articuloResponseDto = new ArticuloResponseDto(
+            articuloEntity.getArticuloId(),
+            articuloEntity.getTitulo(),
+            articuloEntity.getContenido(),
+            articuloEntity.getFechaCreacion(),
+            articuloEntity.getFechaActualizacion(),
+            articuloEntity.getUrlArticulo(),
+            new UsuarioResponseArticuloDto(
+                    articuloEntity.getUsuario().getUsuarioId(),
+                    articuloEntity.getUsuario().getUsername(),
+                    articuloEntity.getUsuario().getEmail()
+            ),
+            categoriasDto
+        );
+
+        return articuloResponseDto;
     }
 
     @Override

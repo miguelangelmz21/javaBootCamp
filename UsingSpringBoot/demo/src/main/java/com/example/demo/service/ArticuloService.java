@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface ArticuloService {
-    ArticuloEntity create(ArticuloCreateDto articulo);
+    ArticuloResponseDto create(ArticuloCreateDto articulo);
     List<ArticuloEntity> findAll();
     ArticuloResponseDto findById(Integer id);
     ArticuloEntity update(ArticuloEntity articulo, int id);

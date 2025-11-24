@@ -4,6 +4,9 @@ import com.example.demo.dto.request.ArticuloCreateDto;
 import com.example.demo.dto.response.ArticuloResponseDto;
 import com.example.demo.entity.ArticuloEntity;
 import com.example.demo.service.ArticuloService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -18,8 +21,12 @@ public class ArticuloController {
     }
 
     @PostMapping("/save")
-    public ArticuloEntity save(@RequestBody ArticuloCreateDto articulo) {
+    /*public ArticuloResponseDto save(@Valid @RequestBody ArticuloCreateDto articulo) {
         return articuloService.create(articulo);
+    }*/
+    public ResponseEntity<ArticuloResponseDto> save(@Valid @RequestBody ArticuloCreateDto articulo) {
+        ArticuloResponseDto art = articuloService.create(articulo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(art);
     }
 
     @PostMapping("/categoria")
