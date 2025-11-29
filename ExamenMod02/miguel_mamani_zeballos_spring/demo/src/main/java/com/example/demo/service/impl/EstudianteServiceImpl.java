@@ -30,42 +30,21 @@ public class EstudianteServiceImpl implements EstudianteService {
         estudianteEntity.setApellido(estudiante.getApellido());
         estudianteEntity.setEmail(estudiante.getEmail());
         estudianteEntity.setFechaNacimiento(estudiante.getFechaNacimiento());
-        // Al crear un estudiante nuevo no tendrá matrículas todavía.
-        estudianteRepository.save(estudianteEntity);
-
+        List<MatriculaEntity> matriculas = estudianteEntity.getCursosMatriculados();
         List<MatriculaResponseEstudianteDto> matriculasDto = new ArrayList<>();
-        return new ResponseEstudianteDto(
-            estudianteEntity.getDni(),
-            estudianteEntity.getNombre(),
-            estudianteEntity.getApellido(),
-            estudianteEntity.getEmail(),
-            estudianteEntity.getFechaNacimiento(),
-            matriculasDto
-        );
-    }
-
-    @Override
-    public ResponseEstudianteDto obtenerEstudiante(String dni) {
-        var opt = estudianteRepository.findById(dni);
-        if (opt.isEmpty()) return null;
-        EstudianteEntity estudiante = opt.get();
-        List<MatriculaResponseEstudianteDto> matriculasDto = new ArrayList<>();
-        if (estudiante.getCursosMatriculados() != null) {
-            for (MatriculaEntity m : estudiante.getCursosMatriculados()) {
-                var curso = m.getCurso();
-                matriculasDto.add(new MatriculaResponseEstudianteDto(
-                        curso != null ? curso.getCodigo() : null,
-                        curso != null ? curso.getNombre() : null,
-                        m.getNota()
-                ));
-            }
+        for (MatriculaEntity matricula : matriculas) {
+            matriculasDto.add(new MatriculaResponseEstudianteDto(
+                    matricula.getMatriculaId(),
+                    matricula.getCurso().getNombre()
+            ));
         }
+        estudianteRepository.save(estudianteEntity);
         return new ResponseEstudianteDto(
-                estudiante.getDni(),
-                estudiante.getNombre(),
-                estudiante.getApellido(),
-                estudiante.getEmail(),
-                estudiante.getFechaNacimiento(),
+                estudianteEntity.getDni(),
+                estudianteEntity.getNombre(),
+                estudianteEntity.getApellido(),
+                estudianteEntity.getEmail(),
+                estudianteEntity.getFechaNacimiento(),
                 matriculasDto
         );
     }

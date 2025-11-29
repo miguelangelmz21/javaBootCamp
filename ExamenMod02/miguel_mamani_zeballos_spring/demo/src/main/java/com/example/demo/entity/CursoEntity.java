@@ -18,7 +18,7 @@ public class CursoEntity
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int cursoId;
-    @Column(nullable = false, length = 20, unique = true)
+    @Column(nullable = false, length = 20)
     private String codigo;
     @Column(nullable = false, length = 100)
     private String nombre;

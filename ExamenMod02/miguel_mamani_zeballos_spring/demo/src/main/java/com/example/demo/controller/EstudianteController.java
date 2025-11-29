@@ -21,8 +21,13 @@ public class EstudianteController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEstudianteDto getById(@PathVariable String id){
-        return estudianteService.obtenerEstudiante(id);
+    public EstudianteEntity getById(@PathVariable int id){
+        Optional<EstudianteEntity> estudianteOptional = estudianteRepository.findById(id);
+        if(estudianteOptional.isPresent()){
+            EstudianteEntity estudianteDB = estudianteOptional.get();
+            return estudianteDB;
+        }
+        return null;
     }
 
     @PostMapping("/save")

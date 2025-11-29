@@ -5,5 +5,4 @@ import com.example.demo.dto.response.ResponseEstudianteDto;
 
 public interface EstudianteService {
     ResponseEstudianteDto crearEstudiante(CreateEstudianteDto estudiante);
-    ResponseEstudianteDto obtenerEstudiante(String dni);
 }

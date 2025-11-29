@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.CreateMatriculaDto;
-import com.example.demo.dto.response.ResponseMatriculaDto;
 import com.example.demo.service.MatriculaService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +17,7 @@ public class MatriculaController {
     }
 
     @PostMapping("/save")
-    public ResponseMatriculaDto saveMatricula(@RequestBody CreateMatriculaDto matricula){
-        return matriculaService.crearMatricula(matricula);
+    public String createMatricula(@RequestBody CreateMatriculaDto matricula){
+        return matriculaService.createMatricula(matricula);
     }
 }

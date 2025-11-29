@@ -1,9 +1,9 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.EstudianteEntity;
+import com.example.demo.entity.MatriculaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface EstudianteRepository extends JpaRepository<EstudianteEntity, String> {
+public interface MatriculaRepository extends JpaRepository<MatriculaEntity, Integer> {
     /*@Query(value = "SELECT * FROM curso",
             nativeQuery = true)
     ArrayList<CursoEntity> findByFechaCreacionAndfechaActualizacion(Date fechaCreacion, Date fechaActualizacion);*/

@@ -1,7 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.request.MatriculaCreateDto;
+import com.example.demo.dto.request.CreateMatriculaDto;
+import com.example.demo.dto.response.ResponseMatriculaDto;
 
 public interface MatriculaService {
-    //String createComentario(MatriculaCreateDto comentario);
+    ResponseMatriculaDto crearMatricula(CreateMatriculaDto matricula);
 }

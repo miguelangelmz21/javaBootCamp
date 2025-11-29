@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CursoCreateDto {
+public class CreateCursoDto {
 
     @NotBlank(message = "El codigo es requerido")
     @Size(min= 20, max = 20, message = "El codigo debe de tener entre max 20 caracteres")

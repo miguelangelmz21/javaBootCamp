@@ -1,11 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.request.CreateMatriculaDto;
-import com.example.demo.dto.response.ResponseMatriculaDto;
 import com.example.demo.entity.CursoEntity;
 import com.example.demo.entity.EstudianteEntity;
 import com.example.demo.entity.MatriculaEntity;
-import com.example.demo.repository.CursoRepository;
 import com.example.demo.repository.EstudianteRepository;
 import com.example.demo.repository.MatriculaRepository;
 import com.example.demo.service.MatriculaService;
@@ -15,39 +13,33 @@ import java.util.Optional;
 
 @Service
 public class MatriculaServiceImpl implements MatriculaService {
-
+    /*
     private final MatriculaRepository matriculaRepository;
-    private final CursoRepository cursoRepository;
+    private final ArticuloRepository cursoRepository;
     private final EstudianteRepository estudianteRepository;
 
-    public MatriculaServiceImpl(MatriculaRepository matriculaRepository, CursoRepository cursoRepository, EstudianteRepository estudianteRepository) {
+    public MatriculaServiceImpl(MatriculaRepository matriculaRepository, ArticuloRepository cursoRepository, EstudianteRepository estudianteRepository) {
         this.matriculaRepository = matriculaRepository;
         this.cursoRepository = cursoRepository;
         this.estudianteRepository = estudianteRepository;
     }
 
     @Override
-    public ResponseMatriculaDto crearMatricula(CreateMatriculaDto matricula) {
-        Optional<CursoEntity> cursoOptional = cursoRepository.findById(matricula.getCursoId());
-        Optional<EstudianteEntity> estudianteOptional = estudianteRepository.findById(matricula.getEstudianteDni());
+    public String createComentario(CreateMatriculaDto matricula) {
+        Optional<CursoEntity> cursoOptional = cursoRepository.findById(matricula.getIdCArticulo());
+        Optional<EstudianteEntity> estudianteOptional = estudianteRepository.findById(matricula.getIdUsuario());
 
         if (cursoOptional.isEmpty() || estudianteOptional.isEmpty()) {
             return null;
         }
-        EstudianteEntity estudiante = estudianteOptional.get();
         CursoEntity curso = cursoOptional.get();
+        EstudianteEntity estudiante = estudianteOptional.get();
         MatriculaEntity matriculaEntity = new MatriculaEntity();
         //matriculaEntity.setNota(matricula.getNota());
-        matriculaEntity.setEstudiante(estudiante);
         matriculaEntity.setCurso(curso);
-        estudianteRepository.save(estudiante);
-        matriculaRepository.save(matriculaEntity);
-        return new ResponseMatriculaDto(
-            matriculaEntity.getMatriculaId(),
-            estudiante.getDni(),
-            curso.getNombre(),
-            matriculaEntity.getFechaInscripcion(),
-            matriculaEntity.getNota()
-        );
+        matriculaEntity.setEstudiante(estudiante);
+        estudianteRepository.saveEstudiante(estudiante);
+        //matriculaRepository.save(matriculaEntity);
+        return "Matricula creada correctamente";*/
     }
 }
