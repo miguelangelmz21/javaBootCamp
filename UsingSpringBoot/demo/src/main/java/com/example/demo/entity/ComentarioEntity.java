@@ -13,7 +13,7 @@ import java.util.Date;
 public class ComentarioEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comenatario_id")
+    @Column(name = "comentario_id")
     private int comentarioId;
 
     @Column(length = 512)

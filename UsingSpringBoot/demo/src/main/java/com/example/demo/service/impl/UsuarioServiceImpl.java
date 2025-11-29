@@ -7,6 +7,7 @@ import com.example.demo.entity.UsuarioEntity;
 import com.example.demo.feignClient.ReniecClient;
 import com.example.demo.repository.UsuarioRepository;
 import com.example.demo.service.UsuarioService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +15,14 @@ import org.springframework.stereotype.Service;
 public class UsuarioServiceImpl implements UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final ReniecClient reniecClient;
-    //private final ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
     @Value("${api.token}")
     private String token;
 
-    //public UsuarioServiceImpl(UsuarioRepository usuarioRepository, ReniecClient reniecClient, ModelMapper modelMapper) {
-    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, ReniecClient reniecClient) {
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, ReniecClient reniecClient, ModelMapper modelMapper) {
         this.usuarioRepository = usuarioRepository;
         this.reniecClient = reniecClient;
-        //this.modelMapper = modelMapper;
+        this.modelMapper = modelMapper;
     }
 
     @Override

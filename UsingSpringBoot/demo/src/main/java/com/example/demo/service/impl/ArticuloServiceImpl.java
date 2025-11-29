@@ -12,6 +12,7 @@ import com.example.demo.repository.CategoriaRepository;
 import com.example.demo.repository.UsuarioRepository;
 import com.example.demo.service.ArticuloService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,13 +23,13 @@ public class ArticuloServiceImpl implements ArticuloService {
     private final ArticuloRepository articuloRepository;
     private final UsuarioRepository usuarioRepository;
     private final CategoriaRepository categoriaRepository;
-    //private final ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-    public ArticuloServiceImpl(ArticuloRepository articuloRepository, UsuarioRepository usuarioRepository, CategoriaRepository categoriaRepository) {
+    public ArticuloServiceImpl(ArticuloRepository articuloRepository, UsuarioRepository usuarioRepository, CategoriaRepository categoriaRepository, ModelMapper modelMapper) {
         this.articuloRepository = articuloRepository;
         this.usuarioRepository = usuarioRepository;
         this.categoriaRepository = categoriaRepository;
-        //this.modelMapper = modelMapper;
+        this.modelMapper = modelMapper;
     }
     @Override
     public ArticuloResponseDto  create(ArticuloCreateDto articulo) {
@@ -46,14 +47,18 @@ public class ArticuloServiceImpl implements ArticuloService {
         articuloEntity.setUrlArticulo(url);
         articuloEntity.setUsuario(usuarioEntity);
         articuloRepository.save(articuloEntity);
+        ArticuloResponseDto articuloResponseDto = modelMapper.map(articuloEntity, ArticuloResponseDto.class);
         List<CategoriaEntity> categorias = articuloEntity.getCategorias();
         List<CategoriaResponseArticuloDto> categoriasDto = new ArrayList<>();
         for (CategoriaEntity categoria : categorias) {
+            /*
             categoriasDto.add(new CategoriaResponseArticuloDto(
                     categoria.getCategoriaId(),
                     categoria.getNombreCategoria()
-            ));
+            ));*/
+            categoriasDto.add(modelMapper.map(categoria, CategoriaResponseArticuloDto.class));
         }
+        /*
         ArticuloResponseDto articuloResponseDto = new ArticuloResponseDto(
             articuloEntity.getArticuloId(),
             articuloEntity.getTitulo(),
@@ -69,6 +74,9 @@ public class ArticuloServiceImpl implements ArticuloService {
             categoriasDto
         );
 
+        return articuloResponseDto;*/
+        articuloResponseDto.setUsuario(modelMapper.map(articuloEntity.getUsuario(), UsuarioResponseArticuloDto.class));
+        articuloResponseDto.setCategorias(categoriasDto);
         return articuloResponseDto;
     }
 
@@ -83,15 +91,9 @@ public class ArticuloServiceImpl implements ArticuloService {
         if (articulo == null) {
             return null;
         }
-        return fromEntityToDto(articulo);
-    }
-    /*public ArticuloResponseDto findById(Integer id) {
-        ArticuloResponseDto articulo = articuloRepository.findById(id).orElse(null);
-        if (articulo == null) {
-            return null;
-        }
+        //return fromEntityToDto(articulo);
         return modelMapper.map(articulo, ArticuloResponseDto.class);
-    }*/
+    }
 
     @Override
     public ArticuloEntity update(ArticuloEntity articulo, int id) {
