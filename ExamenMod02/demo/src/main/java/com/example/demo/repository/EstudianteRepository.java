@@ -4,7 +4,6 @@ import com.example.demo.entity.EstudianteEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EstudianteRepository extends JpaRepository<EstudianteEntity, String> {
-    /*@Query(value = "SELECT * FROM curso",
-            nativeQuery = true)
-    ArrayList<CursoEntity> findByFechaCreacionAndfechaActualizacion(Date fechaCreacion, Date fechaActualizacion);*/
+    boolean existsByDni(String dni);
+    boolean existsByEmail(String email);
 }

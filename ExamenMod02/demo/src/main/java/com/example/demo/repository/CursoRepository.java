@@ -6,7 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface CursoRepository extends JpaRepository<CursoEntity, Integer> {
-    /*@Query(value = "SELECT * FROM curso",
-            nativeQuery = true)
-    ArrayList<CursoEntity> findByFechaCreacionAndfechaActualizacion(Date fechaCreacion, Date fechaActualizacion);*/
+    boolean existsByCodigo(String codigo);
 }

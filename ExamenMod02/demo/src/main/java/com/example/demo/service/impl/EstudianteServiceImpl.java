@@ -1,20 +1,22 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.request.CreateEstudianteDto;
-import com.example.demo.dto.response.MatriculaResponseEstudianteDto;
+import com.example.demo.dto.response.ResponseCursosMatriculadosDto;
 import com.example.demo.dto.response.ResponseEstudianteDto;
 import com.example.demo.entity.EstudianteEntity;
 import com.example.demo.entity.MatriculaEntity;
 import com.example.demo.repository.EstudianteRepository;
 import com.example.demo.service.EstudianteService;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Slf4j
+@Transactional
 public class EstudianteServiceImpl implements EstudianteService {
     private final EstudianteRepository estudianteRepository;
 
@@ -24,16 +26,28 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Override
     public ResponseEstudianteDto crearEstudiante(CreateEstudianteDto estudiante) {
+        // Validar si el DNI ya existe
+        if (estudianteRepository.existsByDni(estudiante.getDni())) {
+            throw new ResponseStatusException(
+                HttpStatus.CONFLICT, 
+                "El estudiante con DNI " + estudiante.getDni() + " ya está registrado"
+            );
+        }        
+        // Validar si el email ya existe
+        if (estudianteRepository.existsByEmail(estudiante.getEmail())) {
+            throw new ResponseStatusException(
+                HttpStatus.CONFLICT, 
+                "El email " + estudiante.getEmail() + " ya está registrado"
+            );
+        }        
         EstudianteEntity estudianteEntity = new EstudianteEntity();
         estudianteEntity.setDni(estudiante.getDni());
         estudianteEntity.setNombre(estudiante.getNombre());
         estudianteEntity.setApellido(estudiante.getApellido());
         estudianteEntity.setEmail(estudiante.getEmail());
         estudianteEntity.setFechaNacimiento(estudiante.getFechaNacimiento());
-        // Al crear un estudiante nuevo no tendrá matrículas todavía.
         estudianteRepository.save(estudianteEntity);
-
-        List<MatriculaResponseEstudianteDto> matriculasDto = new ArrayList<>();
+        List<ResponseCursosMatriculadosDto> matriculasDto = new ArrayList<>();
         return new ResponseEstudianteDto(
             estudianteEntity.getDni(),
             estudianteEntity.getNombre(),
@@ -49,14 +63,14 @@ public class EstudianteServiceImpl implements EstudianteService {
         var opt = estudianteRepository.findById(dni);
         if (opt.isEmpty()) return null;
         EstudianteEntity estudiante = opt.get();
-        List<MatriculaResponseEstudianteDto> matriculasDto = new ArrayList<>();
+        List<ResponseCursosMatriculadosDto> matriculasDto = new ArrayList<>();
         if (estudiante.getCursosMatriculados() != null) {
-            for (MatriculaEntity m : estudiante.getCursosMatriculados()) {
-                var curso = m.getCurso();
-                matriculasDto.add(new MatriculaResponseEstudianteDto(
+            for (MatriculaEntity matriculaEntity : estudiante.getCursosMatriculados()) {
+                var curso = matriculaEntity.getCurso();
+                matriculasDto.add(new ResponseCursosMatriculadosDto(
                         curso != null ? curso.getCodigo() : null,
                         curso != null ? curso.getNombre() : null,
-                        m.getNota()
+                        matriculaEntity.getNota()
                 ));
             }
         }
@@ -68,5 +82,46 @@ public class EstudianteServiceImpl implements EstudianteService {
                 estudiante.getFechaNacimiento(),
                 matriculasDto
         );
+    }
+
+    @Override
+    public ResponseEstudianteDto actualizarEstudiante(String dni, CreateEstudianteDto estudiante) {
+        var opt = estudianteRepository.findById(dni);
+        if (opt.isEmpty()) return null;
+        EstudianteEntity estudianteEntity = opt.get();
+        estudianteEntity.setNombre(estudiante.getNombre());
+        estudianteEntity.setApellido(estudiante.getApellido());
+        estudianteEntity.setEmail(estudiante.getEmail());
+        estudianteEntity.setFechaNacimiento(estudiante.getFechaNacimiento());
+        estudianteRepository.save(estudianteEntity);
+        List<ResponseCursosMatriculadosDto> matriculasDto = new ArrayList<>();
+        if (estudianteEntity.getCursosMatriculados() != null) {
+            for (MatriculaEntity matriculaEntity : estudianteEntity.getCursosMatriculados()) {
+                var curso = matriculaEntity.getCurso();
+                matriculasDto.add(new ResponseCursosMatriculadosDto(
+                        curso != null ? curso.getCodigo() : null,
+                        curso != null ? curso.getNombre() : null,
+                        matriculaEntity.getNota()
+                ));
+            }
+        }
+        return new ResponseEstudianteDto(
+                estudianteEntity.getDni(),
+                estudianteEntity.getNombre(),
+                estudianteEntity.getApellido(),
+                estudianteEntity.getEmail(),
+                estudianteEntity.getFechaNacimiento(),
+                matriculasDto
+        );
+    }
+
+    @Override
+    public void validarEstudianteExiste(String dni) {
+        if (!estudianteRepository.existsById(dni)) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, 
+                "El estudiante con DNI " + dni + " no existe"
+            );
+        }
     }
 }

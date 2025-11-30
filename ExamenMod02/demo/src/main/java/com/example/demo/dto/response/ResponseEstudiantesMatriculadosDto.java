@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MatriculaResponseEstudianteDto {
-    private int codigo;
-    private String nombre;
+public class ResponseEstudiantesMatriculadosDto {
+    private String dni;
+    private String nombreCompleto;
+    private java.math.BigDecimal nota;
 }

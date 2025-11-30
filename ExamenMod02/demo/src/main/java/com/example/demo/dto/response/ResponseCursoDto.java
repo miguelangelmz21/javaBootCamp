@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -18,4 +17,5 @@ public class ResponseCursoDto {
     private String nombre;
     private String profesor;
     private int creditos;
-    private List<MatriculaResponseCursoDto> estudiantesMatriculados;}
+    private List<ResponseEstudiantesMatriculadosDto> estudiantesMatriculados;
+}

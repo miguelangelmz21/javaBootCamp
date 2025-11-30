@@ -20,5 +20,5 @@ public class ResponseEstudianteDto {
     private String email;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date fechaNacimiento;
-    private List<MatriculaResponseEstudianteDto> cursosMatriculados;
+    private List<ResponseCursosMatriculadosDto> cursosMatriculados;
 }

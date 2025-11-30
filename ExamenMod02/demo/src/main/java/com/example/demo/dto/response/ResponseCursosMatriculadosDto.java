@@ -5,17 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.List;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseCursoDto {
-    private int id;
+public class ResponseCursosMatriculadosDto {
     private String codigo;
     private String nombre;
-    private String profesor;
-    private int creditos;
-    private List<MatriculaResponseCursoDto> estudiantesMatriculados;}
+    private BigDecimal nota;
+}
